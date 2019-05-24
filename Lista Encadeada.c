@@ -14,20 +14,37 @@ No * novoNo(int valor){
 	return novo;
 }
 
-void adicionar(No * ini, int valor){
-	//Encontra o ultimo nó
-	while (ini->prox != NULL)
-		ini = ini->prox;	
+void adicionarI(No ** iniL, int valor){
+	//(*no) Ã© o ponteiro fora da funÃ§Ã£o
+
+	No* aux = novoNo(valor);
+	aux->prox = (*iniL);
+	(*iniL) = aux;
+}
+
+void adicionarF(No ** ini, int valor){
+	//(*no) Ã© o ponteiro fora da funÃ§Ã£o
+
+	if ((*ini) == NULL){
+		(*ini) = novoNo(valor);
+		return;
+	}
+
+	No *aux = (*ini);
+
+	//Encontra o ultimo nÃ³
+	while (aux->prox != NULL)
+		aux = aux->prox;	
 	
-	//Declaração do novo nó
+	//DeclaraÃ§Ã£o do novo nÃ³
 	No * novo = novoNo(valor);
 	
-	//add o novo nó no próximo do ultimo nó
-	ini->prox = novo;
+	//add o novo nÃ³ no prÃ³ximo do ultimo nÃ³
+	aux->prox = novo;
 }
 
 void remover(No ** no, int valor){	
-	//(*no) é o ponteiro fora da função
+	//(*no) Ã© o ponteiro fora da funÃ§Ã£o
 		
 	No * ant = NULL;	
 	No * aux = (*no);
@@ -36,21 +53,21 @@ void remover(No ** no, int valor){
 		printf("Lista Vazia\n");
 		return;
 	}		
-	
-	//Encontra o valor, sempre armazenando o nó anterior
-	while (aux->valor != valor && aux != NULL){
+		
+	//Encontra o valor, sempre armazenando o nÃ³ anterior
+	while (aux != NULL && aux->valor != valor){
 		ant = aux;
 		aux = aux->prox;
 	}
-	
+
 	if (aux == NULL)
-		printf("Valor não existente\n");
+		printf("Valor (%d) nÃ£o existente\n", valor);
 	else{		
 		if (ant!=NULL){
 			ant->prox = aux->prox;	
 		}					
 		else		
-			*no = aux->prox;	
+			(*no) = aux->prox;	
 			
 		free(aux);
 	}	
@@ -64,22 +81,25 @@ void imprimir(No * no) {
 }
 
 int main(){
-	No * li = novoNo(10);
+	No * li = NULL;
 	
-	//Add elementos
-	adicionar(li, 6);
-	adicionar(li, 8);
-	adicionar(li, 16);
-	adicionar(li, 56);
-	adicionar(li, 88);	
+	//Add elementos no inicio
+	adicionarI(&li, 10);
+	adicionarI(&li, 6);
+	adicionarI(&li, 8);
+
+	//Add elementos no fim
+	adicionarF(&li, 16);
+	adicionarF(&li, 56);
+	adicionarF(&li, 88);	
 	
 	//Imprime
 	imprimir(li);	
 	printf("\n");
 	
-	//Busca e remoção
+	//Busca e remoÃ§Ã£o
 	remover(&li, 6);
-	remover(&li, 10);		
+	remover(&li, 10);
 	
 	//Imprime
 	imprimir(li);
